@@ -2,8 +2,7 @@ class ItemsController < ApplicationController
   # GET /items
   # GET /items.json
   def index
-    @items = Item.all
-
+    @items = Item.order :position
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @items }
@@ -77,6 +76,16 @@ class ItemsController < ApplicationController
 
     respond_to do |format|
       format.html { redirect_to items_url }
+      format.json { head :no_content }
+    end
+  end
+  def sort
+    @items = Item.all
+    @items.each do |item|
+      item.position=params['item'].index(item.id.to_s)+1
+      item.save
+    end
+    respond_to do |format|
       format.json { head :no_content }
     end
   end
