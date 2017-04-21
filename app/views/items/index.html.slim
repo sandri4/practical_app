@@ -21,3 +21,13 @@ table
 br
 
 = link_to 'New Item', new_item_path
+
+div#items-sortable
+  - @items.each do |item|
+    = div_for item, data: {id: item.id}
+      = item.name
+      hr
+
+= form_tag do
+  = hidden_field_tag :items_ids, ""
+  = submit_tag 'Save Changes'

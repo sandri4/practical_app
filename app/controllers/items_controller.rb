@@ -79,5 +79,21 @@ class ItemsController < ApplicationController
       format.html { redirect_to items_url }
       format.json { head :no_content }
     end
+    def ordering
+  if (@orders = params[:items_ids]) && (@orders.present?)
+    @orders = JSON.parse(params[:items_ids])
+    if @orders.kind_of?(Array) && @orders.size > 0
+      # Let build hash for mass update
+      data = {}
+      @orders.each_with_index do |iden, index|
+        data[iden] = {ordering: index}
+      end
+      Item.all.update(data.keys, data.values) # still update one-by-one at backend
+    end
+  end
+  respond_to do |format|
+    format.html { redirect_to items_path }
+  end
+end
   end
 end
